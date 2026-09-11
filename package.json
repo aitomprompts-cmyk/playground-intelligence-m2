@@ -1,0 +1,17 @@
+{
+  "name": "playground-intelligence-m2",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Playground Intelligence — ส่วน Zone Alert สำหรับการบ้าน Module 2 (Firestore)",
+  "scripts": {
+    "dev": "serve -l 3001 .",
+    "seed": "node scripts/seed.mjs"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "dependencies": {
+    "firebase": "^12.18.0"
+  }
+}

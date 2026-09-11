@@ -1,0 +1,103 @@
+/* สีจาก design system ของ Playground Intelligence (docs/design-assets/design-system.md ใน repo หลัก) */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&display=swap");
+
+:root {
+  --green: #1B5E20;
+  --blue: #0277BD;
+  --yellow: #FBC02D;
+  --red: #C62828;
+  --surface: #f8f9fa;
+  --card: #ffffff;
+  --text: #191c1d;
+  --muted: #41493e;
+  --line: #e1e3e4;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 20px;
+  padding: 12px 16px;
+  background: var(--green);
+  color: #fff;
+}
+.navbar .brand { font-weight: 700; margin-right: 12px; }
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.85;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+.navbar a.active,
+.navbar a:hover { opacity: 1; border-bottom-color: var(--yellow); }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 24px 16px 48px; }
+
+h1 { margin: 0 0 4px; font-size: 28px; color: var(--blue); }
+h2 { margin: 0 0 8px; font-size: 20px; color: var(--blue); }
+.subtitle { margin: 0 0 16px; color: var(--muted); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th { font-size: 14px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+td.time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.zone { font-weight: 600; white-space: nowrap; }
+.count { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-pending  { background: #fff4cc; color: #6b4e00; border: 1px solid var(--yellow); }
+.badge-ack      { background: #e1f1fb; color: #01579b; border: 1px solid var(--blue); }
+.badge-resolved { background: #e3f1e3; color: var(--green); border: 1px solid var(--green); }
+.badge-unknown  { background: #eeeeee; color: #333333; border: 1px solid #cccccc; }
+
+.alert { border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+.alert-warn { background: #fff4cc; border: 1px solid var(--yellow); }
+.error { color: var(--red); }
+
+.btn {
+  display: inline-block;
+  background: var(--green);
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .hide-mobile { display: none; }
+  h1 { font-size: 24px; }
+}

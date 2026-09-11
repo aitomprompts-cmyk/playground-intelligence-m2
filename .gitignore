@@ -1,0 +1,9 @@
+# ชิ้นส่วนที่เครื่องมือติดตั้งให้ (สร้างใหม่ได้เสมอด้วย npm install)
+node_modules/
+
+# ไฟล์ที่เครื่องสร้างเอง
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
