@@ -1,24 +1,10 @@
-// ─────────────────────────────────────────────────────────────
-// js/firebase-config.js — ค่าเชื่อมต่อ Firebase
-// ใช้ได้ทั้งในเบราว์เซอร์ (ผ่าน import map ใน <head>) และใน Node (scripts/seed.mjs)
-//
-// 📌 วางค่าจาก Firebase Console → ⚙️ Project settings → Your apps → </>
-//    แทนข้อความ "วางค่า-...-ที่นี่" ด้านล่างให้ครบทุกช่อง
-// ─────────────────────────────────────────────────────────────
-
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-
+// ค่าตั้งค่า Firebase ของโปรเจกต์ zone-alert-pi-m2 (ได้จาก firebase apps:sdkconfig WEB)
+// ไฟล์นี้อยู่ในเครื่องเท่านั้น — .gitignore กันไว้ · ดูตัวอย่างใน js/firebase-config.example.js
 export const firebaseConfig = {
-  apiKey: "วางค่า-apiKey-ที่นี่",
-  authDomain: "วางค่า-authDomain-ที่นี่",
-  projectId: "วางค่า-projectId-ที่นี่",
-  storageBucket: "วางค่า-storageBucket-ที่นี่",
-  messagingSenderId: "วางค่า-messagingSenderId-ที่นี่",
-  appId: "วางค่า-appId-ที่นี่"
+  apiKey: "AIzaSyBS8MPJz8ayg_9ownjNy-o1O3rxP4-i1Zc",
+  authDomain: "zone-alert-pi-m2.firebaseapp.com",
+  projectId: "zone-alert-pi-m2",
+  storageBucket: "zone-alert-pi-m2.firebasestorage.app",
+  messagingSenderId: "853615586311",
+  appId: "1:853615586311:web:67b9313bfde17922208ea2"
 };
-
-// ยังไม่ได้วางค่าจริง → หน้าเว็บขึ้นแถบเตือน และสคริปต์ seed หยุดพร้อมบอกวิธีแก้
-export const ตั้งค่าแล้ว = !firebaseConfig.projectId.startsWith("วางค่า");
-
-export const db = ตั้งค่าแล้ว ? getFirestore(initializeApp(firebaseConfig)) : null;

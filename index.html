@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>หน้าแรก · Playground Intelligence</title>
   <link rel="stylesheet" href="css/style.css">
-  <script src="js/util.js" defer></script>
-  <script src="js/nav.js" defer></script>
+  <script src="js/util.js"></script>
+  <script src="js/nav.js"></script>
 </head>
 <body>
   <div id="nav"></div>
 
   <div class="container">
     <h1>Zone Alert</h1>
-    <p class="subtitle">แจ้งเตือนเหตุการณ์ในโซน ที่ครูเวรต้องกดรับทราบ · ส่วนที่เลือกทำใน Module 2</p>
+    <p class="subtitle">แจ้งเตือนเหตุการณ์ในโซน ที่ครูเวรต้องกดรับทราบ</p>
 
     <div class="card">
       <h2>ระบบนี้ทำอะไร</h2>
@@ -23,8 +23,28 @@
         และมีสถานะ <strong>รอรับทราบ → รับทราบแล้ว → ปิดเคส</strong>
         โดย <strong>ครูเวรประจำโซน</strong> เป็นคนกดเปลี่ยน
       </p>
-      <p class="subtitle">สัปดาห์ที่ 6 ทำถึงการอ่านข้อมูลเท่านั้น · ปุ่มเพิ่ม แก้ ลบ และล็อกอิน เป็นงานสัปดาห์ที่ 7</p>
-      <a class="btn" href="alerts.html">ดูรายการแจ้งเตือน →</a>
+    </div>
+
+    <div class="card">
+      <h2>บทบาท 2 ประเภท</h2>
+      <p><strong>🧑‍🏫 ครูเวร (duty_teacher)</strong> — เห็นเฉพาะแจ้งเตือนของตัวเอง · เปลี่ยนสถานะและเขียนบันทึก</p>
+      <p><strong>🛠️ ผู้ดูแลระบบ (admin)</strong> — เห็นแจ้งเตือนทั้งหมด · สร้าง ลบ และจัดการประเภทเหตุการณ์</p>
+    </div>
+
+    <div class="card">
+      <h2>สถานะ 3 ขั้น</h2>
+      <p>
+        <span class="badge badge-pending">รอรับทราบ</span>
+        → <span class="badge badge-ack">รับทราบแล้ว</span>
+        → <span class="badge badge-resolved">ปิดเคส</span>
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="btn-row">
+        <a class="btn" href="login.html">เข้าสู่ระบบ</a>
+        <a class="btn" href="alerts.html">ดูรายการแจ้งเตือน</a>
+      </div>
     </div>
   </div>
 </body>

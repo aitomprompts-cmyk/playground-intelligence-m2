@@ -5,16 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>รายการแจ้งเตือน · Playground Intelligence</title>
   <link rel="stylesheet" href="css/style.css">
-  <script type="importmap">
-  {
-    "imports": {
-      "firebase/app": "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js",
-      "firebase/firestore": "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js"
-    }
-  }
-  </script>
-  <script src="js/util.js" defer></script>
-  <script src="js/nav.js" defer></script>
+  <script src="js/util.js"></script>
+  <script src="js/nav.js"></script>
   <script type="module" src="js/alerts.js"></script>
 </head>
 <body>
@@ -22,7 +14,9 @@
 
   <div class="container">
     <h1>รายการแจ้งเตือน</h1>
-    <p class="subtitle">แจ้งเตือนเหตุการณ์ในโซนทั้งหมด อ่านจาก Firestore · เรียงจากใหม่ไปเก่า</p>
+    <p class="subtitle" id="subtitle">กำลังโหลด…</p>
+
+    <div id="ปุ่มสร้าง"></div>
 
     <div id="ผลลัพธ์" class="card">
       <p>กำลังโหลดข้อมูล…</p>

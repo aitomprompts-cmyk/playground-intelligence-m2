@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายละเอียดแจ้งเตือน · Playground Intelligence</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/util.js"></script>
+  <script src="js/nav.js"></script>
+  <script type="module" src="js/alert-detail.js"></script>
+</head>
+<body>
+  <div id="nav"></div>
+
+  <div class="container">
+    <h1>รายละเอียดแจ้งเตือน</h1>
+
+    <div id="กล่องแจ้งเตือน" class="card">
+      <p>กำลังโหลด…</p>
+    </div>
+
+    <div id="ปุ่มการกระทำ"></div>
+
+    <div id="บันทึกการ์ด" class="card">
+      <h2>บันทึกการตอบสนอง</h2>
+
+      <div id="รายการบันทึก"></div>
+
+      <textarea id="ข้อความบันทึก" placeholder="พิมพ์บันทึกการตอบสนอง…"></textarea>
+
+      <div id="เตือนบันทึก" class="alert alert-error hidden" style="margin-top: 8px;"></div>
+
+      <div class="btn-row" style="margin-top: 8px;">
+        <button id="ปุ่มส่งบันทึก" class="btn btn-blue">ส่งบันทึก</button>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 24px;">
+      <a href="alerts.html">← กลับไปรายการแจ้งเตือน</a>
+    </div>
+  </div>
+</body>
+</html>

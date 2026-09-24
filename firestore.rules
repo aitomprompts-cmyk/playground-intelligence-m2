@@ -1,0 +1,178 @@
+// ─────────────────────────────────────────────────────────────
+// firestore.rules — กฎเฝ้าข้อมูลของ Zone Alert
+//
+// หลักการ: ไม่ล็อกอิน → อ่าน/เขียนอะไรไม่ได้เลย · ครูเวรเห็นเฉพาะแจ้งเตือนที่
+// teacherId เป็นของตัวเอง · ผู้ดูแลระบบเห็นทุกใบ · สร้างแจ้งเตือนได้เฉพาะ
+// ผู้ดูแลระบบและเริ่มที่ "รอรับทราบ" เสมอ · เปลี่ยนสถานะได้เฉพาะครูเวรเจ้าของ
+// ทีละขั้นตามลูกศร และแก้ได้เฉพาะช่อง status · ลบแจ้งเตือนได้เฉพาะผู้ดูแลระบบ
+// เมื่อยัง "รอรับทราบ" · โฟลเดอร์ย่อย responses ถูกครอบด้วยกฎชุดเดียวกัน ·
+// สมัครสมาชิกใหม่ตั้งตัวเองเป็น admin ไม่ได้
+//
+// ⚠️ หมายเหตุ: ชื่อฟังก์ชัน/ตัวแปรในไฟล์นี้ตั้งใจใช้ภาษาอังกฤษล้วน เพราะภาษา
+// กฎของ Firestore ไม่รองรับตัวอักษรไทยในชื่อฟังก์ชัน/ตัวแปรอย่างน่าเชื่อถือ
+// ส่วนคอมเมนต์และค่าข้อความ (เช่นชื่อสถานะ) ยังคงเป็นภาษาไทยตามสเปค
+// ─────────────────────────────────────────────────────────────
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── ฟังก์ชันช่วยตรวจสอบสิทธิ์ ──────────────────────────────
+
+    // ล็อกอินอยู่หรือไม่
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // อ่านบทบาทของผู้ใช้ที่กำลังล็อกอินอยู่ จากไฟล์ users/{uid} ของตัวเอง
+    // (เรียกได้ก็ต่อเมื่อ signedIn() เป็นจริงแล้วเท่านั้น เพื่อไม่ให้ request.auth.uid เป็น null)
+    function myRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    // ผู้ดูแลระบบเท่านั้น — เห็นแจ้งเตือนทุกใบ สร้าง/ลบแจ้งเตือน จัดการประเภทเหตุการณ์
+    function isAdmin() {
+      return signedIn() && myRole() == 'admin';
+    }
+
+    // บทบาทที่อีเมลนี้ "ควรได้" ตอนสมัครสมาชิก — รายชื่อนี้ต้องตรงกับฟังก์ชัน
+    // expectedRole() ใน js/auth.js เป๊ะ เพราะรอบนี้ไม่มีหน้าจัดการผู้ใช้ให้แก้บทบาท
+    // ในฐานข้อมูลตรง ๆ ใครสมัครนอกรายชื่อนี้ได้บทบาท duty_teacher เสมอ
+    function roleForEmail() {
+      return {
+        'tester.admin@example.com': 'admin'
+      }.get(request.auth.token.email, 'duty_teacher');
+    }
+
+    // ผู้ใช้คนปัจจุบันมีสิทธิ์เห็นแจ้งเตือนเลขที่ alertId หรือไม่
+    // (ครูเวรเจ้าของแจ้งเตือนนั้น หรือเป็นผู้ดูแลระบบ)
+    function canSeeAlert(alertId) {
+      let alert = get(/databases/$(database)/documents/alerts/$(alertId)).data;
+      return alert.teacherId == request.auth.uid || isAdmin();
+    }
+
+    // ── users ──────────────────────────────────────────────────
+    match /users/{uid} {
+      // อ่านได้เฉพาะไฟล์ตัวเอง หรือถ้าเป็นผู้ดูแลระบบ อ่านของคนอื่นได้ด้วย
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+
+      // สมัครสมาชิกใหม่: สร้างได้เฉพาะไฟล์ของตัวเอง มีครบแค่ 3 ช่อง (name, email, role)
+      // email ต้องตรงกับอีเมลที่ใช้ล็อกอินจริง และ role ต้องเป็นไปตามรายชื่อ roleForEmail()
+      // เท่านั้น — กันไม่ให้สมัครสมาชิกใหม่ตั้งบทบาทตัวเองเป็น admin เอง
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name', 'email', 'role'])
+        && request.resource.data.keys().hasAll(['name', 'email', 'role'])
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.role == roleForEmail()
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0;
+
+      // แก้ไขได้เฉพาะเจ้าของไฟล์ และแก้ได้เฉพาะช่อง name เท่านั้น
+      allow update: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name']);
+
+      // ไม่มีปุ่มลบบัญชีในสเปครอบนี้
+      allow delete: if false;
+    }
+
+    // ── alertPatterns ──────────────────────────────────────────
+    match /alertPatterns/{patternId} {
+      // ทุกคนที่ล็อกอินอ่านได้ (ครูเวรเห็นเป็นรายการอ่านอย่างเดียว)
+      allow read: if signedIn();
+
+      // เพิ่ม/แก้/ลบ ได้เฉพาะผู้ดูแลระบบ และชื่อประเภทต้องไม่ว่างเปล่า
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['name'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0;
+
+      allow update: if isAdmin()
+        && request.resource.data.keys().hasOnly(['name'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0;
+
+      allow delete: if isAdmin();
+    }
+
+    // ── alerts ─────────────────────────────────────────────────
+    match /alerts/{alertId} {
+      // เห็นได้เฉพาะแจ้งเตือนของตัวเอง (teacherId ตรงกับผู้ล็อกอิน) หรือถ้าเป็น
+      // ผู้ดูแลระบบเห็นได้ทุกใบ (หน้ารายการของครูเวรต้อง query ด้วย
+      // where("teacherId","==",uid) เท่านั้นถึงจะผ่านกฎนี้ได้ — ดู js/data.js ฟังก์ชัน listAlerts)
+      allow read: if signedIn() && (resource.data.teacherId == request.auth.uid || isAdmin());
+
+      // สร้างแจ้งเตือนใหม่: เฉพาะผู้ดูแลระบบ เริ่มที่สถานะ "รอรับทราบ" เสมอ ไฟล์ต้องมี
+      // ครบทุกช่องตาม spec.md หัวข้อ 5 เท่านั้น ห้ามมีช่องอื่นปน และครูเวรที่มอบหมายต้อง
+      // มีอยู่จริงในระบบด้วยบทบาท duty_teacher
+      allow create: if isAdmin()
+        && request.resource.data.status == 'รอรับทราบ'
+        && request.resource.data.keys().hasOnly([
+             'title', 'description', 'zoneName', 'status', 'createdAt',
+             'teacherId', 'teacherName', 'patternId', 'patternName'
+           ])
+        && request.resource.data.keys().hasAll([
+             'title', 'description', 'zoneName', 'status', 'createdAt',
+             'teacherId', 'teacherName', 'patternId', 'patternName'
+           ])
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.description is string
+        && request.resource.data.description.size() > 0
+        && request.resource.data.zoneName is string
+        && request.resource.data.zoneName.size() > 0
+        && request.resource.data.teacherId is string
+        && request.resource.data.teacherId.size() > 0
+        && request.resource.data.patternId is string
+        && request.resource.data.patternId.size() > 0
+        && exists(/databases/$(database)/documents/users/$(request.resource.data.teacherId))
+        && get(/databases/$(database)/documents/users/$(request.resource.data.teacherId)).data.role == 'duty_teacher';
+
+      // เปลี่ยนสถานะได้เฉพาะครูเวรเจ้าของแจ้งเตือน ทีละขั้นตามลูกศรเท่านั้น
+      // (รอรับทราบ → รับทราบแล้ว → ปิดเคส) ห้ามข้ามขั้น ห้ามย้อนกลับ และแก้ได้เฉพาะช่อง status
+      allow update: if signedIn()
+        && resource.data.teacherId == request.auth.uid
+        && myRole() == 'duty_teacher'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && (
+          (resource.data.status == 'รอรับทราบ' && request.resource.data.status == 'รับทราบแล้ว') ||
+          (resource.data.status == 'รับทราบแล้ว' && request.resource.data.status == 'ปิดเคส')
+        );
+
+      // ลบได้เฉพาะผู้ดูแลระบบ และเฉพาะใบที่ยังอยู่ในสถานะ "รอรับทราบ" เท่านั้น
+      allow delete: if isAdmin() && resource.data.status == 'รอรับทราบ';
+
+      // ── responses (โฟลเดอร์ย่อยของแจ้งเตือนแต่ละใบ — บันทึกการตอบสนอง) ──
+      match /responses/{responseId} {
+        // เห็นได้เฉพาะคนที่เห็นแจ้งเตือนแม่ได้ (ครูเวรเจ้าของ หรือผู้ดูแลระบบ)
+        allow read: if signedIn() && canSeeAlert(alertId);
+
+        // เขียนบันทึกได้เฉพาะคนที่เห็นแจ้งเตือนแม่ได้ ผู้เขียนต้องเป็นตัวเอง
+        // ข้อความห้ามว่างเปล่า และไฟล์ต้องมีครบทุกช่องตามสเปคเท่านั้น
+        allow create: if signedIn()
+          && canSeeAlert(alertId)
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.message is string
+          && request.resource.data.message.size() > 0
+          && request.resource.data.keys().hasOnly(['authorId', 'authorName', 'message', 'createdAt']);
+
+        // ไม่มีการแก้ไขบันทึกในสเปครอบนี้
+        allow update: if false;
+
+        // ลบได้เฉพาะตอนที่ผู้ดูแลระบบลบทั้งแจ้งเตือน (ใบต้องยัง "รอรับทราบ" อยู่)
+        // js/data.js ฟังก์ชัน deleteAlert ลบบันทึกทุกอันก่อน แล้วจึงลบไฟล์แจ้งเตือน
+        allow delete: if isAdmin()
+          && get(/databases/$(database)/documents/alerts/$(alertId)).data.status == 'รอรับทราบ';
+      }
+    }
+
+    // ปิดกั้นทุกโฟลเดอร์/ไฟล์อื่นนอกเหนือจากที่ระบุไว้ข้างบนอย่างชัดเจน
+    // (Firestore ปฏิเสธเป็นค่าเริ่มต้นอยู่แล้วถ้าไม่มีกฎใดจับคู่เส้นทางนั้น แต่เขียนกันไว้
+    // ให้เห็นชัดเจนว่าตั้งใจปิด ไม่ใช่ลืมเขียนกฎ)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

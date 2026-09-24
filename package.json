@@ -6,12 +6,12 @@
   "description": "Playground Intelligence — ส่วน Zone Alert สำหรับการบ้าน Module 2 (Firestore)",
   "scripts": {
     "dev": "serve -l 3001 .",
-    "seed": "node scripts/seed.mjs"
+    "setup-test-data": "node tests/setup-accounts.mjs",
+    "test": "playwright test",
+    "test:online": "BASE_URL=https://zone-alert-pi-m2.web.app playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "serve": "^14.2.1"
-  },
-  "dependencies": {
-    "firebase": "^12.18.0"
   }
 }

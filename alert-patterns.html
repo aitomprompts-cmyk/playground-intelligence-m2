@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ประเภทเหตุการณ์ · Playground Intelligence</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/util.js"></script>
+  <script src="js/nav.js"></script>
+  <script type="module" src="js/alert-patterns.js"></script>
+</head>
+<body>
+  <div id="nav"></div>
+
+  <div class="container">
+    <h1>ประเภทเหตุการณ์</h1>
+    <p class="subtitle">จัดการประเภทเหตุการณ์ที่ใช้ในระบบ</p>
+
+    <div id="เตือนประเภท" class="alert alert-error hidden"></div>
+
+    <div id="ประเภทการ์ด" class="card">
+      <h2>รายการประเภททั้งหมด</h2>
+      <div id="ตารางประเภท"></div>
+    </div>
+
+    <div id="เพิ่มการ์ด" class="card">
+      <h2>เพิ่มประเภทใหม่</h2>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="ชื่อประเภทใหม่" placeholder="ชื่อประเภท">
+        <button id="ปุ่มเพิ่ม" class="btn">เพิ่ม</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

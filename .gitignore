@@ -7,3 +7,19 @@ Thumbs.db
 *.log
 .vscode/
 .idea/
+
+# 🔑 ไฟล์ที่มีคีย์หรือค่าเฉพาะเครื่อง — ห้ามขึ้น GitHub เด็ดขาด
+js/config.js
+js/firebase-config.js
+.firebaserc
+.env
+.env.*
+*serviceAccount*.json
+*firebase-adminsdk*.json
+.firebase/
+
+# 🧪 ไฟล์ที่ Playwright สร้างทุกครั้งที่รันเทสต์
+test-results/
+playwright-report/
+blob-report/
+.playwright-mcp/

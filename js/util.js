@@ -11,6 +11,11 @@ function esc(ข้อความ) {
     .replace(/"/g, "&quot;");
 }
 
+// อ่านค่า query parameter จาก URL เช่น ?id=abc ได้ getQueryParam("id") = "abc"
+function getQueryParam(ชื่อ) {
+  return new URLSearchParams(location.search).get(ชื่อ) || "";
+}
+
 // ป้ายสถานะสี — รอรับทราบ=เหลือง รับทราบแล้ว=ฟ้า ปิดเคส=เขียว
 var ชนิดป้ายสถานะ = {
   "รอรับทราบ": "pending",

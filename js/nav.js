@@ -6,7 +6,9 @@
 (function () {
   var เมนู = [
     { href: "index.html",  ชื่อ: "หน้าแรก" },
-    { href: "alerts.html", ชื่อ: "รายการแจ้งเตือน" }
+    { href: "alerts.html", ชื่อ: "รายการแจ้งเตือน" },
+    { href: "new-alert.html", ชื่อ: "สร้างแจ้งเตือน" },
+    { href: "alert-patterns.html", ชื่อ: "ประเภทเหตุการณ์" }
   ];
 
   var หน้าปัจจุบัน = location.pathname.split("/").pop() || "index.html";
@@ -16,6 +18,7 @@
     var active = m.href === หน้าปัจจุบัน ? ' class="active"' : "";
     html += '<a href="' + m.href + '"' + active + ">" + m.ชื่อ + "</a>";
   });
+  html += '<span class="nav-user" id="navUser"></span>';
   html += "</nav>";
 
   var ที่วาง = document.getElementById("nav");
@@ -23,12 +26,12 @@
 })();
 
 // แถบเตือนสีเหลือง ใช้ตอนที่ยังไม่ได้วางค่า firebaseConfig
-function showConfigWarning() {
+function showConfigWarning(ข้อความ) {
   var กล่อง = document.createElement("div");
   กล่อง.className = "alert alert-warn";
-  กล่อง.innerHTML =
-    "⚠️ <strong>ยังไม่ได้ตั้งค่า Firebase</strong> — หน้านี้จึงยังไม่ได้อ่านข้อมูลจากฐานข้อมูลจริง" +
-    "<br>วางค่า firebaseConfig ในไฟล์ js/firebase-config.js ตามขั้นตอนใน README.md";
+  กล่อง.innerHTML = ข้อความ ||
+    ("⚠️ <strong>ยังไม่ได้ตั้งค่า Firebase</strong> — หน้านี้จึงยังไม่ได้อ่านข้อมูลจากฐานข้อมูลจริง" +
+    "<br>วางค่า firebaseConfig ในไฟล์ js/firebase-config.js ตามขั้นตอนใน README.md");
   var ที่วาง = document.querySelector(".container") || document.body;
   ที่วาง.insertBefore(กล่อง, ที่วาง.firstChild);
 }

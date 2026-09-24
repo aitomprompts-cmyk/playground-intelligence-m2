@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เข้าสู่ระบบ · Playground Intelligence</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/util.js"></script>
+  <script src="js/nav.js"></script>
+  <script type="module" src="js/login.js"></script>
+</head>
+<body>
+  <div id="nav"></div>
+
+  <div class="container">
+    <h1>Zone Alert</h1>
+    <p class="subtitle">เข้าสู่ระบบ หรือ สมัครสมาชิกใหม่</p>
+
+    <div id="ข้อความเตือน" class="alert alert-error hidden"></div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <!-- บัตรเข้าสู่ระบบ -->
+      <div class="card" style="flex: 1 1 280px;">
+        <h2>เข้าสู่ระบบ</h2>
+        <form id="ฟอร์มเข้าสู่ระบบ">
+          <label for="email">อีเมล</label>
+          <input type="email" id="email" placeholder="name@example.com" required>
+
+          <label for="password">รหัสผ่าน</label>
+          <input type="password" id="password" placeholder="••••••" required>
+
+          <div class="btn-row">
+            <button type="submit" id="ปุ่มเข้าสู่ระบบ" class="btn" disabled>เข้าสู่ระบบ</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- บัตรสมัครสมาชิก -->
+      <div class="card" style="flex: 1 1 280px;">
+        <h2>สมัครสมาชิก</h2>
+        <form id="ฟอร์มสมัครสมาชิก">
+          <label for="signupName">ชื่อ-นามสกุล</label>
+          <input type="text" id="signupName" placeholder="เช่น สมชาย ใจดี" required>
+
+          <label for="signupEmail">อีเมล</label>
+          <input type="email" id="signupEmail" placeholder="name@example.com" required>
+
+          <label for="signupPassword">รหัสผ่าน</label>
+          <input type="password" id="signupPassword" placeholder="••••••" required>
+
+          <div class="btn-row">
+            <button type="submit" id="ปุ่มสมัคร" class="btn" disabled>สมัครสมาชิก</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สร้างแจ้งเตือน · Playground Intelligence</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/util.js"></script>
+  <script src="js/nav.js"></script>
+  <script type="module" src="js/new-alert.js"></script>
+</head>
+<body>
+  <div id="nav"></div>
+
+  <div class="container">
+    <h1>สร้างแจ้งเตือน</h1>
+    <p class="subtitle">กรอกให้ครบทุกช่อง แล้วกดบันทึก · แจ้งเตือนใหม่จะมีสถานะ รอรับทราบ เสมอ</p>
+
+    <div id="ข้อความเตือน" class="alert alert-error hidden"></div>
+
+    <div class="card" id="ฟอร์มการ์ด">
+      <form id="ฟอร์มแจ้งเตือน">
+        <label for="title">หัวข้อเหตุการณ์</label>
+        <input type="text" id="title" placeholder="เช่น นักเรียนเข้าพื้นที่ต้องห้าม">
+
+        <label for="description">รายละเอียด</label>
+        <textarea id="description" placeholder="เล่าเหตุการณ์ที่เห็นจากกล้อง…"></textarea>
+
+        <label for="zoneName">โซน</label>
+        <input type="text" id="zoneName" placeholder="เช่น โซน 4 หลังอาคาร 3">
+
+        <label for="patternId">ประเภทเหตุการณ์</label>
+        <select id="patternId">
+          <option value="">— เลือกประเภทเหตุการณ์ —</option>
+        </select>
+
+        <button type="button" id="ปุ่มAI" class="btn-ghost">🤖 ให้ AI ช่วยเสนอประเภทเหตุการณ์</button>
+        <div id="ผลAI" class="alert alert-ai hidden"></div>
+
+        <label for="teacherId">ครูเวรที่รับผิดชอบ</label>
+        <select id="teacherId">
+          <option value="">— เลือกครูเวร —</option>
+        </select>
+
+        <div class="btn-row">
+          <button type="submit" id="ปุ่มบันทึก" class="btn" disabled>บันทึก</button>
+          <a class="btn btn-ghost" href="alerts.html">ยกเลิก</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
